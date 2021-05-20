@@ -3,7 +3,7 @@ from flask import Flask, render_template, url_for
 myApp = Flask(__name__)
 myApp.config.update(
     DEBUG=True,
-    SECRET_KEY=''
+    SECRET_KEY='mysecretkey'
 
 )
 
