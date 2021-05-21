@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<div>
+    {% if user %}
+        <h1>Welcome back {{ user }}</h1>
+    {% endif %}
+    <a href="{{ url_for('/logout') }}">Logout</a>
+</div>
+{% endblock %}
