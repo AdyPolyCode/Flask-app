@@ -29,6 +29,12 @@ def home():
     return render_template('home.html', title='Home', user=user)
 
 
+@myApp.route('/about')
+def about():
+    return render_template('about.html', title='About')
+
+
+
 @myApp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
