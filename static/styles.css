@@ -18,7 +18,7 @@ footer {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: #152447;
+    color: #030a1a;
 }
 
 .nav-bg {
@@ -31,7 +31,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .container .nav-link:hover {
-    color: #2b409e;
+    color: #06063d;
 }
 
 .p-font {
@@ -39,3 +39,12 @@ h1, h2, h3, h4, h5, h6 {
     color: #d3dae6;
 }
 
+.inline-label {
+    font-size: 1.2rem;
+    color: #06063d;
+}
+
+.is-focus:focus {
+    border: 2px solid #17198f;
+    border-radius: 0.5em;
+}
