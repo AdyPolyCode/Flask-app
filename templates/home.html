@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<div>
-    {% if user %}
-        <h1>Welcome back {{ user }}</h1>
-    {% endif %}
-</div>
+    {% for post in posts %}
+
+        <article>
+            <div>
+                <h3><strong>Posted:</strong> {{ post.user.username | title }}</h3>
+                <h4>{{ post.date_posted.strftime("%Y-%m-%d") }} </h4>
+                <p>{{ post.text }}</p>
+            </div>
+        </article>
+
+    {% endfor %}
 {% endblock %}

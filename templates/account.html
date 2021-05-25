@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <fieldset>
-        <legend>Login</legend>
+        <legend>Account Information</legend>
         <form action="" method="POST">
             {{ form.hidden_tag() }}
             <div class="form-group col-sm-3 mb-5">
@@ -14,6 +14,17 @@
                     {% endfor %}
                 {% else %}
                     {{ form.email(class="form-control is-focus") }}
+                {% endif %}
+            </div>
+            <div class="form-group col-sm-3 mb-5">
+                {{ form.username.label(class="inline-label") }}
+                {% if form.username.errors %}
+                {{ form.username(class="form-control is-invalid") }}
+                    {% for error in form.username.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                {% else %}
+                    {{ form.username(class="form-control is-focus") }}
                 {% endif %}
             </div>
             <div class="form-group col-sm-3 mb-5">
@@ -33,7 +44,7 @@
         </form>
     </fieldset>
     <div>
-        <h5>Need an account? Click <a href="{{ url_for('register') }}">here</a>!</h5>
+        <h5>If you want to delete your account click <a href="{{ url_for('delete_account') }}">here</a>.</h5>
     </div>
 </div>
 {% endblock %}
