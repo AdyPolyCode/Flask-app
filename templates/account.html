@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <fieldset>
-        <legend>Account Information</legend>
-        <form action="" method="POST">
-            {{ form.hidden_tag() }}
+    <div>
+        <img src="{{ image_file }}" alt="">
+        <div>
+            <h3>{{ current_user.username }}</h3>
+        </div>
+    </div>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <legend>Account Information</legend>
+            <div class="form-group col-sm-3 mb-5">
+                {{ form.picture.label }}
+                {{ form.picture() }}
+            </div>
             <div class="form-group col-sm-3 mb-5">
                 {{ form.email.label(class="inline-label") }}
                 {% if form.email.errors %}
@@ -38,11 +48,11 @@
                     {{ form.password(class="form-control is-focus") }}
                 {% endif %}
             </div>
-            <div>
-                {{ form.submit() }}
-            </div>
-        </form>
-    </fieldset>
+        </fieldset>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
     <div>
         <h5>If you want to delete your account click <a href="{{ url_for('delete_account') }}">here</a>.</h5>
     </div>
