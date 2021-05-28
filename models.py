@@ -21,6 +21,10 @@ class User(db.Model, UserMixin):
 
     hashed_password = db.Column(db.String(32), index=True, nullable=False)
 
+    profile_picture = db.Column(db.String(20), nullable=False, default='default.jpg')
+
+    gender = db.Column(db.String(10), nullable=False)
+
     joined_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     user_post = db.relationship('Post', backref='user', cascade='all, delete, delete-orphan', lazy=True)
