@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField, RadioField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from models import User, Post
+from flask_login import current_user
 
 
 class RegisterForm(FlaskForm):
@@ -13,6 +15,8 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=16)])
     
     confirm_password = PasswordField('Confirm Password', validators=[EqualTo('password')])
+
+    gender = RadioField('Gender', validators=[DataRequired()], choices=['Male', 'Female'])
     
     submit = SubmitField('Register')
 
@@ -45,18 +49,22 @@ class UpdateAccount(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=4, max=14)])
 
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=16)])
+
+    picture = FileField('New Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
     
     submit = SubmitField('Update')
 
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user:
-            raise ValidationError(f'Email {email.data} is already taken, please choose a different.')
+        if email.data != current_user.email:
+            user = User.query.filter_by(email=email.data).first()
+            if user:
+                raise ValidationError(f'Email {email.data} is already taken, please choose a different.')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError(f'Username {username.data} is already taken, please choose a different.')
+        if username.data != current_user.username:
+            user = User.query.filter_by(username=username.data).first()
+            if user:
+                raise ValidationError(f'Username {username.data} is already taken, please choose a different.')
 
 
 class DeleteAccount(FlaskForm):
