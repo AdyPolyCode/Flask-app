@@ -1,21 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <fieldset>
-        <legend>Login</legend>
-        <form action="" method="POST">
-            {{ form.hidden_tag() }}
-            <div class="form-group col-sm-3 mb-5">
-                {{ form.email.label(class="inline-label") }}
-                {% if form.email.errors %}
-                {{ form.email(class="form-control is-invalid") }}
-                    {% for error in form.email.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                {% else %}
-                    {{ form.email(class="form-control") }}
-                {% endif %}
-            </div>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <legend>Registration</legend>
             <div class="form-group col-sm-3 mb-5">
                 {{ form.username.label(class="inline-label") }}
                 {% if form.username.errors %}
@@ -24,7 +13,18 @@
                         <span>{{ error }}</span>
                     {% endfor %}
                 {% else %}
-                    {{ form.username(class="form-control") }}
+                    {{ form.username(class="form-control is-focus") }}
+                {% endif %}
+            </div>
+            <div class="form-group col-sm-3 mb-5">
+                {{ form.email.label(class="inline-label") }}
+                {% if form.email.errors %}
+                {{ form.email(class="form-control is-invalid") }}
+                    {% for error in form.email.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                {% else %}
+                    {{ form.email(class="form-control is-focus") }}
                 {% endif %}
             </div>
             <div class="form-group col-sm-3 mb-5">
@@ -35,7 +35,7 @@
                         <span>{{ error }}</span>
                     {% endfor %}
                 {% else %}
-                    {{ form.password(class="form-control") }}
+                    {{ form.password(class="form-control is-focus") }}
                 {% endif %}
             </div>
             <div class="form-group col-sm-3 mb-5">
@@ -46,16 +46,27 @@
                         <span>{{ error }}</span>
                     {% endfor %}
                 {% else %}
-                    {{ form.confirm_password(class="form-control") }}
+                    {{ form.confirm_password(class="form-control is-focus") }}
                 {% endif %}
             </div>
-            <div>
-                {{ form.submit() }}
+            <div class="form-group col-sm-3 mb-5">
+                {{ form.gender.label(class="inline-label") }}
+                {% if form.gender.errors %}
+                {{ form.gender(class="form-control is-invalid") }}
+                    {% for error in form.gender.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                {% else %}
+                    {{ form.gender() }}
+                {% endif %}
             </div>
-        </form>
-    </fieldset>
-    <div>
-        <h5>Already have an account? Click <a href="{{ url_for('login') }}">here</a>!</h5>
-    </div>
+        </fieldset>
+        <div class="form-group col-sm-3 mb-5">
+            {{ form.submit() }}
+        </div>
+        <div class="form-group col-sm-3 mb-5">
+            <h5>Already have an account? Click <a href="{{ url_for('login') }}">here</a>!</h5>
+        </div>
+    </form>
 </div>
 {% endblock %}
