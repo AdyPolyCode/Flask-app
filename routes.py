@@ -1,3 +1,5 @@
+import os
+from PIL import Image
 from app import myApp, db
 from flask import render_template, redirect, url_for, request, session, flash
 from forms import RegisterForm, LoginForm, UpdateAccount, DeleteAccount, PostForm
@@ -40,8 +42,8 @@ def register():
         return redirect(url_for('home'))
     form = RegisterForm()
     if form.validate_on_submit():
-        data_collection = form.email.data, form.username.data, form.password.data
-        user = User(username=data_collection[1], email=data_collection[0])
+        data_collection = form.email.data, form.username.data, form.password.data, form.gender.data
+        user = User(username=data_collection[1], email=data_collection[0], gender=data_collection[3])
         user.hash_password(data_collection[2])
         db.session.add(user)
         db.session.commit()
@@ -50,24 +52,41 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
+
+def save_picture(form_pic):
+    rnd_hex = os.urandom(8).hex()
+    _, fHex = os.path.splitext(form_pic.filename)
+    picFn = rnd_hex + fHex
+    picPath = os.path.join(myApp.root_path, 'static/profile_pics', picFn)
+    
+    size = (125, 125)
+    img = Image.open(form_pic)
+    img.thumbnail(size)
+    img.save(picPath)
+    
+    return picFn
+
+
 @myApp.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
     form = UpdateAccount()
-    if form.validate_on_submit():
-        user = current_user
-        if user.check_password(form.password.data):
-            current_user.email = form.email.data
-            current_user.username = form.username.data
-            db.session.commit()
-            flash('Your account has been updated!')
-            return redirect(url_for('home'))
-        else:
-            flash('You have entered wrong password.')
+    if form.validate_on_submit() and current_user.check_password(form.password.data):
+        if form.picture.data:
+            pfile = save_picture(form.picture.data)
+            current_user.profile_picture = pfile
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Account has been updated.')
+        return redirect(url_for('account'))
     elif request.method == 'GET':
         form.email.data = current_user.email
         form.username.data = current_user.username
-    return render_template('account.html', title='Account', form=form)
+    else:
+        flash('Wrong password. Please try again.')
+    image_file = url_for('static', filename='profile_pics/' + current_user.profile_picture)
+    return render_template('account.html', title='Account', form=form, image_file=image_file)
 
 
 @myApp.route('/delete', methods=['GET', 'POST'])
