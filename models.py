@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
 
     hashed_password = db.Column(db.String(32), index=True, nullable=False)
 
-    profile_picture = db.Column(db.String(20), nullable=False, default='default.jpg')
+    profile_picture = db.Column(db.String(20), nullable=False)
 
     gender = db.Column(db.String(10), nullable=False)
 
