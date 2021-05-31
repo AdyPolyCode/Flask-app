@@ -28,6 +28,11 @@
                 {% endif %}
             </div>
             <div class="form-group col-sm-3 mb-5">
+                {{ form.acknowledge.label(class="inline-label") }}
+                {{ form.acknowledge() }}
+                <p>I aggree that with this action I delete the entire account, and I am aware of that all the data related to this account will be lost as well.</p>
+            </div>
+            <div class="form-group col-sm-3 mb-5">
                 {{ form.submit() }}
             </div>
         </form>
