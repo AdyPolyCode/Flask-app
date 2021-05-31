@@ -2,7 +2,7 @@ import os
 from PIL import Image
 from app import myApp, db
 from flask import render_template, redirect, url_for, request, session, flash
-from forms import RegisterForm, LoginForm, UpdateAccount, DeleteAccount, PostForm
+from forms import RegisterForm, LoginForm, UpdateAccount, DeleteAccount, PostForm, EditPostForm
 from models import User, Post
 from flask_login import login_required, login_user, logout_user, current_user
 
@@ -10,7 +10,8 @@ from flask_login import login_required, login_user, logout_user, current_user
 @myApp.route('/home')
 @myApp.route('/')
 def home():
-    posts = Post.query.all()
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=3)
     return render_template('home.html', title='Home', posts=posts)
 
 
@@ -45,6 +46,10 @@ def register():
         data_collection = form.email.data, form.username.data, form.password.data, form.gender.data
         user = User(username=data_collection[1], email=data_collection[0], gender=data_collection[3])
         user.hash_password(data_collection[2])
+        if form.gender.data == 'Male':
+            user.profile_picture = 'man.png'
+        if form.gender.data == 'Female':
+            user.profile_picture = 'woman.png'
         db.session.add(user)
         db.session.commit()
         flash('Succesfully registered.')
@@ -121,3 +126,36 @@ def createPost():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
+@myApp.route('/post/<int:user_id>')
+def user_post(user_id):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(id=user_id).first_or_404()
+    posts = Post.query.filter_by(user=user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=3)
+    return render_template('user_post.html', title=f'Posts by {user.username}', user=user, posts=posts)
+
+
+@myApp.route('/post/my_posts')
+@login_required
+def ownedPost():
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.filter_by(user=current_user).order_by(Post.date_posted.desc()).paginate(page=page, per_page=2)
+    return render_template('myposts.html', title='My Posts', posts=posts)
+
+
+@myApp.route('/post/my_posts/edit/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def editPost(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    form = EditPostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.text = form.content.data
+        db.session.commit()
+        flash('Post has been updated!')
+        return redirect(url_for('ownedPost'))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.text
+    return render_template('editpost.html', title='Edit Post', form=form)
