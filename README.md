@@ -3,10 +3,18 @@
 ###### ###### ######
  
  - Templates folder contains all the html files
-	index.html
+	home.html
 	base.html
 	login.html
 	register.html
+	about.html
+	post.html
+	account.html
+	delete_account.html
+	user_post.html
+	myposts.html
+	editpost.html
+
 
 
 	# home.html
@@ -23,13 +31,27 @@
 	- register template for user registration
 
 	# about.html
-	- coming soon
+	- Informational content about creators
+
+	# post.html
+
+	# account.html
+
+	# delete_account.html
+
+	# user_post.html
+
+	# myposts.html
+
+	# editpost.html
 
  
- - Static folder contaions all the css files (+ bootstrap)
+ - Static folder contaions all the css files (+ bootstrap) + profile pictures
 	bootstrap.css
 	bootstrap.js
 	styles.css
+	
+	profile_pics.folder
 
 ###### ###### ######
 .py files :
