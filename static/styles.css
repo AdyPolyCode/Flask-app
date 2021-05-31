@@ -21,6 +21,10 @@ h1, h2, h3, h4, h5, h6 {
     color: #030a1a;
 }
 
+a {
+    text-decoration: none;
+}
+
 .nav-bg {
     background-color: #62708c;
 }
@@ -47,4 +51,83 @@ h1, h2, h3, h4, h5, h6 {
 .is-focus:focus {
     border: 2px solid #17198f;
     border-radius: 0.5em;
+}
+
+
+.founder1 {
+    margin-bottom: 10px;
+}
+
+.founder2 {
+    margin-bottom: 10px;
+}
+
+.rollable {
+    overflow: scroll;
+    height: 80vh;
+}
+
+.content-space {
+    margin-bottom: 3em;
+}
+
+.inline-links {
+    margin-top: 1.5em;
+    display: inline-block;
+    color: #06063d;
+    border: 2px solid #06063d;
+    background-color: #e2e2f3;
+    padding: 0.5rem;
+}
+
+.inline-links:hover {
+    color: #e2e2f3;
+    border: 2px solid #e2e2f3;
+    background-color: #06063d;
+}
+
+.profile-container {
+    position: absolute;
+    width: 7%;
+    height: 60%;
+    right: 0;
+    top: 0;
+}
+
+.name-right {
+    position: absolute;
+    font-weight: bold;
+    left: 0;
+    width: 65%;
+    height: 100%;
+    color: #000000;
+}
+
+.img-right {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 35%;
+}
+
+.to-edit {
+    text-align: center;
+    padding: 0.2rem;
+    width: 4.5em;
+    float: right;
+    font-size: 1.2em;
+    color: #e2e2f3;
+    border: 2px solid #e2e2f3;
+    background-color: #06063d;
+}
+
+.to-edit:hover {
+    color: #06063d;
+    border: 2px solid #06063d;
+    background-color: #e2e2f3;
+}
+
+.current {
+    background-color: #06063d;
+    color: #e2e2f3;
 }
