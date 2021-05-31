@@ -73,6 +73,8 @@ class DeleteAccount(FlaskForm):
 
     confirm_password = PasswordField('Confirm Password', validators=[EqualTo('password')])
 
+    acknowledge = BooleanField('Agree', validators=[DataRequired()])
+
     submit = SubmitField('Delete')
 
 
@@ -80,9 +82,23 @@ class PostForm(FlaskForm):
 
     title = StringField('Title', validators=[DataRequired(), Length(min=4, max=24)])
 
-    content = TextAreaField('Content', validators=[DataRequired(), Length(min=10, max=160)])
+    content = TextAreaField('Content', validators=[DataRequired(), Length(min=10, max=1000)])
     
     submit = SubmitField('Add Post')
+
+    def validate_title(self, title):
+        post = Post.query.filter_by(title=title.data).first()
+        if post:
+            raise ValidationError('This title is already used, please choose a different.')
+
+
+class EditPostForm(FlaskForm):
+
+    title = StringField('New Title', validators=[DataRequired(), Length(min=4, max=24)])
+
+    content = TextAreaField('New Content', validators=[DataRequired(), Length(min=10, max=1000)])
+
+    submit = SubmitField('Update')
 
     def validate_title(self, title):
         post = Post.query.filter_by(title=title.data).first()
