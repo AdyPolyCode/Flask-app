@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        {% if current_user.username == user.username %}
+            <h1>{{ user.username | title }}</h1>
+        {% else %}
+            <h1>Posts of {{ user.username | title }}</h1>
+        {% endif %}
+        {% for post in posts.items %}
+            <article>
+                <h4>{{ post.title }}</h4>
+                <h5>{{ post.date_posted.strftime('%Y/%m/%d %I:%M %p') }}</h5>
+                <p>{{ post.text }}</p>
+            </article>
+        {% endfor %}
+        {% for page_num in posts.iter_pages() %}
+            {% if page_num %}
+                {% if posts.page == page_num %}
+                    <a class="inline-links current" href="{{ url_for('user_post', user_id=user.id, page=pag_num) }}">{{ page_num }}</a>
+                {% else %}
+                    <a class="inline-links" href="{{ url_for('user_post', user_id=user.id, page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
