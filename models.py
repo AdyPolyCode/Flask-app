@@ -2,6 +2,8 @@ from app import db, myApp, login_manager
 from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+
 
 
 @login_manager.user_loader
@@ -34,6 +36,19 @@ class User(db.Model, UserMixin):
     
     def hash_password(self, password):
         self.hashed_password = generate_password_hash(password)
+    
+    def get_reset_token(self, expire=1800):
+        s = Serializer(myApp.config['SECRET_KEY'])
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+    
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(myApp.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
     
     def __repr__(self):
         return 'User {}\nusername:_{}\nemail:_{}'.format(self.id, self.username, self.email)
