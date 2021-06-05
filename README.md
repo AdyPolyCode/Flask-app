@@ -14,6 +14,9 @@
 	user_post.html
 	myposts.html
 	editpost.html
+	reset_password.html
+	send_reset_token.html
+	smile_store.html
 
 
 
@@ -45,13 +48,19 @@
 
 	# editpost.html
 
+	#reset_password.html
+
+	#send_reset_token.html
+
+	#smile_store.html
+
  
  - Static folder contaions all the css files (+ bootstrap) + profile pictures
 	bootstrap.css
 	bootstrap.js
 	styles.css
 	
-	profile_pics.folder
+	profile_pics.folder - contains 2 base pictures, these are given based on the gender of the user
 
 ###### ###### ######
 .py files :
@@ -59,6 +68,7 @@
 	forms.py
 	models.py
 	routes.py
+	helper_funcs.py
  
  
  - app py file has all the important code to handle, respectively run the server
