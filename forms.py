@@ -104,3 +104,28 @@ class EditPostForm(FlaskForm):
         post = Post.query.filter_by(title=title.data).first()
         if post:
             raise ValidationError('This title is already used, please choose a different.')
+
+
+
+class SendResetTokenForm(FlaskForm):
+
+    email = StringField('Email', validators=[DataRequired(), Email()])
+
+    submit = SubmitField('Recover Password')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if not user:
+            raise ValidationError('This email address does not exist. Please check your data.')
+
+
+class ResetPasswordForm(FlaskForm):
+
+    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8, max=16)])
+
+    confirm_password = PasswordField('Confirm New Password', validators=[EqualTo('new_password')])
+
+    submit = SubmitField('Reset Passwrod')
+
+    def validate_new_password(self, new_password):
+        pass
