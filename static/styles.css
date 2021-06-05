@@ -25,6 +25,19 @@ a {
     text-decoration: none;
 }
 
+.msg-flashes {
+    text-align: center;
+    position: relative;
+    height: 6vh;
+}
+
+.flashed {
+    position: absolute;
+    height: 100%;
+    left: 38%;
+    
+}
+
 .nav-bg {
     background-color: #62708c;
 }
@@ -46,11 +59,6 @@ a {
 .inline-label {
     font-size: 1.2rem;
     color: #06063d;
-}
-
-.is-focus:focus {
-    border: 2px solid #17198f;
-    border-radius: 0.5em;
 }
 
 
@@ -87,27 +95,32 @@ a {
 }
 
 .profile-container {
+    padding: 5px;
+    text-align: right;
     position: absolute;
-    width: 7%;
-    height: 60%;
+    width: 12%;
+    height: 100%;
     right: 0;
     top: 0;
 }
 
 .name-right {
+    padding: 5px;
     position: absolute;
     font-weight: bold;
+    font-size: 0.8em;
     left: 0;
-    width: 65%;
+    width: 70%;
     height: 100%;
     color: #000000;
 }
 
 .img-right {
+    padding: 5px;
     position: absolute;
     right: 0;
-    height: 100%;
-    width: 35%;
+    height: 80%;
+    width: 30%;
 }
 
 .to-edit {
@@ -130,4 +143,36 @@ a {
 .current {
     background-color: #06063d;
     color: #e2e2f3;
+}
+
+.media > img {
+    z-index: -1;
+    border: 2px solid #292423;
+    border-radius: 50%;
+    transition-property: all;
+    transition-duration: 3s;
+}
+
+.media > img:hover {
+    box-shadow: 12px 12px #4b10043f;
+    border-radius: 20%;
+}
+
+.hidden-form {
+    color: white;
+    width: 5%;
+    transition-property: width, color;
+    transition-duration: 2s;
+    transition-delay: 0.5s;
+    transition-timing-function: ease-out;
+}
+
+.hidden-form:hover {
+    color: black;
+    width: 100%;
+}
+
+.inline-choice {
+    list-style: none;
+    font-size: 1.1em;
 }
