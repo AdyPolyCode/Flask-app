@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <div>
+    <div class="media">
         <img src="{{ image_file }}" alt="">
         <div>
             <h3>{{ current_user.username }}</h3>
@@ -23,7 +23,7 @@
                         <span>{{ error }}</span>
                     {% endfor %}
                 {% else %}
-                    {{ form.email(class="form-control is-focus") }}
+                    {{ form.email(class="form-control hidden-form") }}
                 {% endif %}
             </div>
             <div class="form-group col-sm-3 mb-5">
@@ -34,7 +34,7 @@
                         <span>{{ error }}</span>
                     {% endfor %}
                 {% else %}
-                    {{ form.username(class="form-control is-focus") }}
+                    {{ form.username(class="form-control hidden-form") }}
                 {% endif %}
             </div>
             <div class="form-group col-sm-3 mb-5">
@@ -45,7 +45,7 @@
                         <span>{{ error }}</span>
                     {% endfor %}
                 {% else %}
-                    {{ form.password(class="form-control is-focus") }}
+                    {{ form.password(class="form-control hidden-form") }}
                 {% endif %}
             </div>
         </fieldset>
