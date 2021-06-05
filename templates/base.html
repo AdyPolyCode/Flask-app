@@ -23,6 +23,7 @@
                         <a class="nav-link" href="{{ url_for('account') }}">Account</a>
                         <a class="nav-link" href="{{ url_for('createPost') }}">Add Post</a>
                         <a class="nav-link" href="{{ url_for('ownedPost') }}">My Posts</a>
+                        <a class="nav-link" href="{{ url_for('smile_store') }}">Store</a>
                     {% else %}
                         <a class="nav-link" href="{{ url_for('home') }}">Home</a>
                         <a class="nav-link" href="{{ url_for('about') }}">About</a>
@@ -38,7 +39,7 @@
                 </div>
                 {% if current_user.is_authenticated %}
                     <div class="profile-container">
-                        <img class="img-right" src="{{ url_for('static', filename='profile_pics/man.png') }}" alt="Not available">
+                        <img class="img-right" src="{{ url_for('static', filename='profile_pics/' + current_user.profile_picture) }}" alt="Not available">
                         <h3 class="name-right">{{ current_user.username | title }}</h3>
                     </div>
                 {% endif %}
@@ -46,11 +47,11 @@
         </nav>
     </header>
     <main class="container">
-        <div class="msg-flashes">
-            {% with messages = get_flashed_messages() %}
+        <div class="container msg-flashes">
+            {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
-                {% for message in messages %}
-                    {{ message }}
+                {% for category, message in messages %}
+                    <span class="alert alert-{{category}} flashed">{{ message }}</span>
                 {% endfor %}
             {% endif %}
             {% endwith %}
