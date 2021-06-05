@@ -1,10 +1,9 @@
-import os
-from PIL import Image
 from app import myApp, db
 from flask import render_template, redirect, url_for, request, session, flash
-from forms import RegisterForm, LoginForm, UpdateAccount, DeleteAccount, PostForm, EditPostForm
+from forms import RegisterForm, LoginForm, UpdateAccount, DeleteAccount, PostForm, EditPostForm, SendResetTokenForm, ResetPasswordForm
 from models import User, Post
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import login_required, login_user, logout_user, current_user, fresh_login_required
+from helper_funcs import save_picture, send_reset_email
 
 
 @myApp.route('/home')
@@ -23,6 +22,7 @@ def about():
 
 @myApp.route('/login', methods=['GET', 'POST'])
 def login():
+    session.permanent = True
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
@@ -30,10 +30,14 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember.data)
-            flash('Successfully logged in.')
-            return redirect(url_for('home'))
+            next_p = request.args.get('next')
+            flash('Successfully logged in.', category='success')
+            if next_p:
+                return redirect(next_p)
+            else:
+                return redirect(url_for('home'))
         else:
-            flash('Login unsuccesful. Please check your login data.')
+            flash('Login unsuccesful. Please check your login data.', category='danger')
     return render_template('login.html', title='Login', form=form)
 
 
@@ -52,28 +56,15 @@ def register():
             user.profile_picture = 'woman.png'
         db.session.add(user)
         db.session.commit()
-        flash('Succesfully registered.')
+        flash('Succesfully registered.', category='success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
 
 
-def save_picture(form_pic):
-    rnd_hex = os.urandom(8).hex()
-    _, fHex = os.path.splitext(form_pic.filename)
-    picFn = rnd_hex + fHex
-    picPath = os.path.join(myApp.root_path, 'static/profile_pics', picFn)
-    
-    size = (125, 125)
-    img = Image.open(form_pic)
-    img.thumbnail(size)
-    img.save(picPath)
-    
-    return picFn
-
-
 @myApp.route('/account', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
 def account():
     form = UpdateAccount()
     if form.validate_on_submit() and current_user.check_password(form.password.data):
@@ -83,19 +74,20 @@ def account():
         current_user.username = form.username.data
         current_user.email = form.email.data
         db.session.commit()
-        flash('Account has been updated.')
+        flash('Account has been updated.', category='info')
         return redirect(url_for('account'))
     elif request.method == 'GET':
         form.email.data = current_user.email
         form.username.data = current_user.username
     else:
-        flash('Wrong password. Please try again.')
+        flash('Wrong password. Please try again.', category='warning')
     image_file = url_for('static', filename='profile_pics/' + current_user.profile_picture)
     return render_template('account.html', title='Account', form=form, image_file=image_file)
 
 
 @myApp.route('/delete', methods=['GET', 'POST'])
 @login_required
+@fresh_login_required
 def delete_account():
     form = DeleteAccount()
     if form.validate_on_submit():
@@ -103,7 +95,7 @@ def delete_account():
         if user.check_password(form.password.data):
             db.session.delete(user)
             db.session.commit()
-            flash('Your account has been deleted.')
+            flash('Your account has been succesfully deleted.', category='info')
             return redirect(url_for('home'))
     return render_template('delete_account.html', title='Delete Account', form=form)
 
@@ -116,7 +108,7 @@ def createPost():
         post = Post(title=form.title.data, text=form.content.data, user=current_user)
         db.session.add(post)
         db.session.commit()
-        flash('Post succesfully created!')
+        flash('Post has been created!', category='info')
         return redirect(url_for('home'))
     return render_template('post.html', title='New Post', form=form)
 
@@ -124,6 +116,12 @@ def createPost():
 @myApp.route('/logout')
 @login_required
 def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
+@myApp.route('/relog')
+def relog():
     logout_user()
     return redirect(url_for('home'))
 
@@ -153,9 +151,49 @@ def editPost(post_id):
         post.title = form.title.data
         post.text = form.content.data
         db.session.commit()
-        flash('Post has been updated!')
+        flash('Post has been updated!', category='info')
         return redirect(url_for('ownedPost'))
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.text
     return render_template('editpost.html', title='Edit Post', form=form)
+
+
+
+# have to finish
+@myApp.route('/store')
+@login_required
+def smile_store():
+    return render_template('smile_store.html', title='Store')
+
+
+@myApp.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    user = User.verify_reset_token(token)
+    if not user:
+        flash('Invalid or expired reset token', 'warning')
+        return redirect(url_for('send_reset_token'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.hash_password(form.new_password.data)
+        db.session.commit()
+        flash('Your password has been recovered.', 'info')
+        return redirect(url_for('login'))
+
+    return render_template('reset_password.html', title='Reset Password', form=form)
+
+
+@myApp.route('/send_reset_token', methods=['GET', 'POST'])
+def send_reset_token():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    form = SendResetTokenForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash(f'Reset token has been sent to {user.email}', 'info')
+        return redirect(url_for('home'))
+
+    return render_template('send_reset_token.html', title='Forgot Account', form=form)
