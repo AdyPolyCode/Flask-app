@@ -12,6 +12,10 @@ def load_user(user_id):
 
 
 
+collection = db.Table('collection',
+db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+db.Column('emoji_id', db.Integer, db.ForeignKey('emoji.id'), primary_key=True))
+
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
 
@@ -29,7 +33,11 @@ class User(db.Model, UserMixin):
 
     joined_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
+    coins = db.Column(db.Integer, index=True, nullable=False)
+
     user_post = db.relationship('Post', backref='user', cascade='all, delete, delete-orphan', lazy=True)
+
+    emojis = db.relationship('Emoji', secondary=collection, backref=db.backref('users'))
 
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
@@ -69,3 +77,13 @@ class Post(db.Model):
 
     def __repr__(self):
         return 'Post {}\n{}\n{}'.format(self.id, self.title, self.date_posted)
+
+
+class Emoji(db.Model):
+    __tablename__ = 'emoji'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(20), index=True, unique=True, nullable=False)
+
+    price = db.Column(db.Integer, index=True, nullable=False)
