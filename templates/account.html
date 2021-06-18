@@ -1,59 +1,93 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <div class="media">
-        <img src="{{ image_file }}" alt="">
-        <div>
-            <h3>{{ current_user.username }}</h3>
+    <div class="row">
+        <div class="col">
+            <div class="media">
+                <div id="base-info">
+                    <h3>{{ current_user.username | title }}</h3>
+                    <h5>Coins: ${{ current_user.coins }}</h5>
+                </div>
+                <img src="{{ image_file }}" alt="">
+            </div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <fieldset>
+                    <legend>Account Information</legend>
+                    <div class="form-group col-sm-3 mb-5">
+                        {{ form.picture.label }}
+                        {{ form.picture() }}
+                    </div>
+                    <div class="form-group col-sm-3 mb-5">
+                        {{ form.email.label(class="inline-label") }}
+                        {% if form.email.errors %}
+                        {{ form.email(class="form-control is-invalid") }}
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        {% else %}
+                            {{ form.email(class="form-control hidden-form") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-sm-3 mb-5">
+                        {{ form.username.label(class="inline-label") }}
+                        {% if form.username.errors %}
+                        {{ form.username(class="form-control is-invalid") }}
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        {% else %}
+                            {{ form.username(class="form-control hidden-form") }}
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-sm-3 mb-5">
+                        {{ form.password.label(class="inline-label") }}
+                        {% if form.password.errors %}
+                        {{ form.password(class="form-control is-invalid") }}
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        {% else %}
+                            {{ form.password(class="form-control hidden-form") }}
+                        {% endif %}
+                    </div>
+                </fieldset>
+                <div>
+                    {{ form.submit() }}
+                </div>
+            </form>
+        </div>
+        <div class="col owned">
+            <h1>Owned Emojis</h1>
+            <table class="table table-hover table-dark">
+                <thead id="table-head">
+                    <th>#</th>
+                    <th>Name</th>
+                </thead>
+                <tbody id="table-body">
+                    {% if user_emojis %}
+                    {% for emoji in user_emojis %}
+                        <tr>
+                            <td>
+                                {{ emoji.id }}
+                            </td>
+                            <td>
+                                {{ emoji.name }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td style="text-align: center;" colspan="4">
+                                You have not got any emojis.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </div>
-    <form action="" method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <fieldset>
-            <legend>Account Information</legend>
-            <div class="form-group col-sm-3 mb-5">
-                {{ form.picture.label }}
-                {{ form.picture() }}
-            </div>
-            <div class="form-group col-sm-3 mb-5">
-                {{ form.email.label(class="inline-label") }}
-                {% if form.email.errors %}
-                {{ form.email(class="form-control is-invalid") }}
-                    {% for error in form.email.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                {% else %}
-                    {{ form.email(class="form-control hidden-form") }}
-                {% endif %}
-            </div>
-            <div class="form-group col-sm-3 mb-5">
-                {{ form.username.label(class="inline-label") }}
-                {% if form.username.errors %}
-                {{ form.username(class="form-control is-invalid") }}
-                    {% for error in form.username.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                {% else %}
-                    {{ form.username(class="form-control hidden-form") }}
-                {% endif %}
-            </div>
-            <div class="form-group col-sm-3 mb-5">
-                {{ form.password.label(class="inline-label") }}
-                {% if form.password.errors %}
-                {{ form.password(class="form-control is-invalid") }}
-                    {% for error in form.password.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                {% else %}
-                    {{ form.password(class="form-control hidden-form") }}
-                {% endif %}
-            </div>
-        </fieldset>
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
-    <div>
+    <div class="">
         <h5>If you want to delete your account click <a href="{{ url_for('delete_account') }}">here</a>.</h5>
     </div>
 </div>

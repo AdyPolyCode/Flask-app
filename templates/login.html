@@ -33,6 +33,9 @@
             {{ form.remember.label }}
             {{ form.remember() }}
         </div>
+        <div class="form-group col-sm-3 mb-5">
+            {{ form.recap }}
+        </div>
     <div class="form-group col-sm-3 mb-5">
         <h5>Need an account? Click <a href="{{ url_for('register') }}">here</a>!</h5>
         <h5>Click <a href="{{ url_for('send_reset_token') }}">here</a> to reset your password.</h5>

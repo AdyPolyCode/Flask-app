@@ -1,6 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <h1>Coming soon...</h1>
+    <section class="store">
+        <div class="container store-table">
+            <h1>Emoji Store</h1>
+            <table class="table table-hover table-dark">
+                <thead id="table-head">
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </thead>
+                <tbody id="table-body">
+                    {% if emojis %}
+                    {% for emoji in emojis %}
+                        <tr>
+                            <td>{{ emoji.id }}</td>
+                            <td>{{ emoji.name }}</td>
+                            <td>{{ emoji.price }}$</td>
+                            <td><a style="color: #fff;" href="{{ url_for('buy_emoji', id=emoji.id) }}">Buy</a></td>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td style="text-align: center;" colspan="4">
+                                This table is currently empty.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 </div>
 {% endblock %}

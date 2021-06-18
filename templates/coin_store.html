@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <section class="store">
+            <div class="row store-table">
+                <h1>Coins coins coins ...</h1>
+                <p>You are very welcome to our coin store. Look around and have some!</p>
+                <table class="table table-hover table-dark">
+                    <thead class="table-head">
+                        <th>#</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </thead>
+                    <tbody class="table-body">
+                        <tr>
+                            <td>111</td>
+                            <td>10</td>
+                            <td>2.50$</td>
+                            <td><a style="color: #fff;" href="{{ url_for('buy_coin', id=111) }}">Buy</a></td>
+                        </tr>
+                        <tr>
+                            <td>222</td>
+                            <td>25</td>
+                            <td>5.25$</td>
+                            <td><a style="color: #fff;" href="{{ url_for('buy_coin', id=222) }}">Buy</a></td>
+                        </tr>
+                        <tr>
+                            <td>333</td>
+                            <td>50</td>
+                            <td>9.50$</td>
+                            <td><a style="color: #fff;" href="{{ url_for('buy_coin', id=333) }}">Buy</a></td>
+                        </tr>
+                        <tr>
+                            <td>444</td>
+                            <td>100</td>
+                            <td>17.25$</td>
+                            <td><a style="color: #fff;" href="{{ url_for('buy_coin', id=444) }}">Buy</a></td>
+                        </tr>
+                    </tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+        </section>
+    </div>
+{% endblock %}
