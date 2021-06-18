@@ -1,7 +1,7 @@
 from app import myApp, db
 from flask import render_template, redirect, url_for, request, session, flash
 from forms import RegisterForm, LoginForm, UpdateAccount, DeleteAccount, PostForm, EditPostForm, SendResetTokenForm, ResetPasswordForm
-from models import User, Post
+from models import User, Post, Emoji, collection
 from flask_login import login_required, login_user, logout_user, current_user, fresh_login_required
 from helper_funcs import save_picture, send_reset_email
 
@@ -50,6 +50,7 @@ def register():
         data_collection = form.email.data, form.username.data, form.password.data, form.gender.data
         user = User(username=data_collection[1], email=data_collection[0], gender=data_collection[3])
         user.hash_password(data_collection[2])
+        user.coins = 10
         if form.gender.data == 'Male':
             user.profile_picture = 'man.png'
         if form.gender.data == 'Female':
@@ -66,6 +67,7 @@ def register():
 @login_required
 @fresh_login_required
 def account():
+    user_emojis = current_user.emojis
     form = UpdateAccount()
     if form.validate_on_submit() and current_user.check_password(form.password.data):
         if form.picture.data:
@@ -82,7 +84,7 @@ def account():
     else:
         flash('Wrong password. Please try again.', category='warning')
     image_file = url_for('static', filename='profile_pics/' + current_user.profile_picture)
-    return render_template('account.html', title='Account', form=form, image_file=image_file)
+    return render_template('account.html', title='Account', form=form, image_file=image_file, user_emojis=user_emojis)
 
 
 @myApp.route('/delete', methods=['GET', 'POST'])
@@ -159,12 +161,55 @@ def editPost(post_id):
     return render_template('editpost.html', title='Edit Post', form=form)
 
 
+@myApp.route('/delete_post/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    db.session.delete(post)
+    db.session.commit()
+    flash(f'Post {post.title} has been deleted.', 'info')
+    return redirect(url_for('home'))
 
-# have to finish
+
 @myApp.route('/store')
 @login_required
 def smile_store():
-    return render_template('smile_store.html', title='Store')
+    emojis = Emoji.query.all()
+    return render_template('smile_store.html', title='Store', emojis=emojis)
+
+
+@myApp.route('/coin_store')
+@login_required
+def coin_store():
+    return render_template('coin_store.html', title='Coin Store')
+
+
+@myApp.route('/coin_store/coin/<int:id>')
+@login_required
+def buy_coin(id):
+    current_user.coins += id
+    db.session.commit()
+    flash(f'Item w successfully bought for w$!', 'success')
+    return redirect(url_for('coin_store'))
+
+
+@myApp.route('/emoji/<int:id>')
+@login_required
+def buy_emoji(id):
+    emoji = Emoji.query.filter_by(id=id).first()
+    user_emojis = current_user.emojis
+    if emoji not in user_emojis:
+        if emoji.price <= current_user.coins:
+            current_user.emojis.append(emoji)
+            db.session.commit()
+            flash(f'Item {emoji.name} successfully bought.', 'success')
+            return redirect(url_for('smile_store'))
+        else:
+            flash('You dont have enough coins to buy this item!', 'danger')
+            return redirect(url_for('smile_store'))
+    else:
+        flash('You already have this item!', 'warning')
+        return redirect(url_for('smile_store'))
 
 
 @myApp.route('/reset_password/<token>', methods=['GET', 'POST'])
