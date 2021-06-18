@@ -1,4 +1,4 @@
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField, RadioField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
@@ -17,6 +17,8 @@ class RegisterForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[EqualTo('password')])
 
     gender = RadioField('Gender', validators=[DataRequired()], choices=['Male', 'Female'])
+
+    recap = RecaptchaField()
     
     submit = SubmitField('Register')
 
@@ -38,6 +40,8 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8, max=16)])
     
     remember = BooleanField('Remember me?')
+
+    recap = RecaptchaField()
     
     submit = SubmitField('Login')
 
