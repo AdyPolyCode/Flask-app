@@ -5,6 +5,8 @@ from datetime import timedelta
 from flask_mail import Mail
 
 myApp = Flask(__name__)
+myApp.config['RECAPTCHA_PUBLIC_KEY'] = '6LccTi8bAAAAALSpWdEOSfuEbOaBKER3g5g0lewC'
+myApp.config['RECAPTCHA_PRIVATE_KEY'] = '6LccTi8bAAAAABT2LEpYFBIM_q_jdCABEkw6w5nQ'
 myApp.config['SECRET_KEY'] = '907fc501577a7dc638aca7592865aa18'
 myApp.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydb.db'
 myApp.config['DEBUG'] = True
