@@ -2,7 +2,7 @@
 
 
 body {
-    background-color: #d3dae6;
+    background-color: #a3b1ca;
     font-family: 'Cairo', sans-serif;
 }
 
@@ -12,7 +12,7 @@ header {
 }
 
 footer {
-    background-color: #62708c;
+    background-color: #232833;
     margin-top: 4em;
     width: 100%;
 }
@@ -39,16 +39,23 @@ a {
 }
 
 .nav-bg {
-    background-color: #62708c;
+    background-color: #232833;
 }
 
 .container .nav-link {
     color: #d3dae6;
     font-weight: bold;
+    transition-property: color;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-out;
 }
 
 .container .nav-link:hover {
-    color: #06063d;
+    color: #1a9c9c;
+}
+
+.container .nav-link:active {
+    color: #630909;
 }
 
 .p-font {
@@ -112,7 +119,7 @@ a {
     left: 0;
     width: 70%;
     height: 100%;
-    color: #000000;
+    color: #ffffff;
 }
 
 .img-right {
@@ -123,7 +130,7 @@ a {
     width: 30%;
 }
 
-.to-edit {
+#to-edit {
     text-align: center;
     padding: 0.2rem;
     width: 4.5em;
@@ -134,7 +141,24 @@ a {
     background-color: #06063d;
 }
 
-.to-edit:hover {
+#to-delete {
+    text-align: center;
+    padding: 0.2rem;
+    width: 4.5em;
+    float: right;
+    font-size: 1.2em;
+    color: #e2e2f3;
+    border: 2px solid #e2e2f3;
+    background-color: #06063d;
+}
+
+#to-edit:hover {
+    color: #06063d;
+    border: 2px solid #06063d;
+    background-color: #e2e2f3;
+}
+
+#to-delete:hover {
     color: #06063d;
     border: 2px solid #06063d;
     background-color: #e2e2f3;
@@ -158,6 +182,15 @@ a {
     border-radius: 20%;
 }
 
+.media #base-info {
+    padding-left: 1.8rem;
+}
+
+.media > #base-info > h3, h5 {
+    display: inline;
+    padding-right: 1.8rem;
+}
+
 .hidden-form {
     color: white;
     width: 5%;
@@ -175,4 +208,36 @@ a {
 .inline-choice {
     list-style: none;
     font-size: 1.1em;
+}
+
+.store .store-title {
+    padding: 20px;
+}
+
+.store .store-table {
+    padding: 0;
+    max-height: 40vh;
+    overflow: auto;
+}
+
+.store .store-table table {
+    border: none;
+    margin: 0;
+}
+
+.store .owned {
+    max-height: 30vh;
+    overflow: auto;
+}
+
+#table-head {
+    font-size: 20px;
+}
+
+#table-head th {
+    padding-left: 25px;
+}
+
+#table-body tr td {
+    padding-left: 25px;
 }
